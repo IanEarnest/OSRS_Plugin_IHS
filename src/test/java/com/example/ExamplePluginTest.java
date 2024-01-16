@@ -11,3 +11,4 @@ public class ExamplePluginTest
 		RuneLite.main(args);
 	}
 }
+

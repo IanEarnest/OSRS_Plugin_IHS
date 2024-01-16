@@ -7,6 +7,7 @@ import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.events.GameStateChanged;
+import net.runelite.api.events.OverheadTextChanged;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
@@ -49,5 +50,14 @@ public class ExamplePlugin extends Plugin
 	ExampleConfig provideConfig(ConfigManager configManager)
 	{
 		return configManager.getConfig(ExampleConfig.class);
+	}
+
+	// Example of overhead message capture - https://www.youtube.com/watch?v=ZpDkEVxwhzo
+	@Subscribe
+	public void onOverheadTextChanged(OverheadTextChanged e)
+	{
+		if (e.getActor().equals(client.getLocalPlayer()) && e.getOverheadText().equals("Ah")) {
+			client.getLocalPlayer().setOverheadText("Ah no");
+		}
 	}
 }
