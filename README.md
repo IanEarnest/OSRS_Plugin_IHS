@@ -1,5 +1,7 @@
 # Example
-An example plugin - greets and something...
+IHSDev plugin - a plugin I used for testing with multiple features
+- greetings
+- overhead text change
 
 launch.json - configuration
 "vmArgs": ["-ea"],

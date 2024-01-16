@@ -12,12 +12,26 @@
         },
         {
             "type": "java",
-            "name": "ExamplePluginTest",
+            "name": "IHSDevPluginDescriptor",
             "request": "launch",
-            "mainClass": "com.example.ExamplePluginTest",
+            "mainClass": "com.ihsdev.IHSDevPluginDescriptor",
+            "projectName": "OSRS_Plugin_IHS"
+        },
+        {
+            "type": "java",
+            "name": "IHSDevPluginTest",
+            "request": "launch",
+            "mainClass": "com.ihsdev.IHSDevPluginTest",
             "projectName": "OSRS_Plugin_IHS",
-            "vmArgs": ["-ea"],
-            "args": ["--developer-mode"] // Shows RuleLite Dev tools //"args": ["--debug"] //--insecure-write-credentials // allows login outside of Jagex Launcher
+            "vmArgs": [
+                "-ea"
+            ],
+            "args": [
+                "--developer-mode"
+            ]
         }
     ]
 }
+
+
+
