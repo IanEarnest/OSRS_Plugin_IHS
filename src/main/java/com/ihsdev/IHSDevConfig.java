@@ -7,52 +7,105 @@ import net.runelite.client.config.ConfigItem;
 @ConfigGroup("ihsdev")
 public interface IHSDevConfig extends Config
 {
-	//https://github.com/runelite/runelite/wiki/Creating-plugin-config-panels
-	@ConfigItem(
-		position = 1,
-		keyName = "ihsdev",
-		name = "Welcome Greeting",
-		description = "The message to show to the user when they login"
-	)
-	default String greeting()
-	{
-		return "Hello World! From IHS";
+	/*
+	 * String - Welcome Greeting
+	 * Int - Default World Set
+	 * Boolean - Enable/Disable Default World Setting
+	 * Boolean - Enable/Disable GameTick Info
+	 * Boolean - Trigger something
+	 * Combobox - combo box of things
+	*/
+	public int defaultWorld = 326;
+
+	public static enum ConfigItemsKeys { // TODO Update list per ConfigItem
+		WelcomeGreeting,
+		DefaultWorld,
+		DoWorldSet,
+		IsGameTickInfoSet,
+		TriggerSomething,
+		Combobox1
 	}
 
+	//https://github.com/runelite/runelite/wiki/Creating-plugin-config-panels
+	//#region String - Welcome Greeting
 	@ConfigItem(
+		position = 1,
+		keyName = "WelcomeGreeting",
+		name = "Welcome Greeting",
+		description = "The message to show to the user when they login"
+		)
+		default String greeting()
+		{
+			return "Hello World! From IHS";
+		}
+	//#endregion
+		
+
+	//#region Int - Default World Set
+	@ConfigItem(
+		position = 2,
+		keyName = "DefaultWorld",
+		name = "Default World on load",
+		description = "Default World set"
+	)
+	default int defaultWorldInt()
+	{
+		return defaultWorld;
+	}
+	/*
+	default int defaultWorldInt(int e)
+	{
+		return e;
+	}
+	*/
+	//#endregion
+
+	//#region Boolean - Enable/Disable Default World Setting
+	@ConfigItem(
+		position = 3,
 		keyName = "DoWorldSet",
-		name = "Do World Set",
-		description = "doWorldSet"
+		name = "Set world on load?",
+		description = "Set the world"
 	)
 	default boolean doWorldSet()
 	{
 		return true;
 	}
+	//#endregion
 
+	//#region Boolean - Enable/Disable GameTick Info
 	@ConfigItem(
-		keyName = "ihsdev1",
-		name = "Checkbox",
-		description = "myCheckbox"
+		position = 4,
+		keyName = "GameTickInfo",
+		name = "GameTick Info?",
+		description = "Messages for each game tick"
 	)
-	default boolean myCheckbox()
+	default boolean isGameTickInfoSet()
 	{
 		return true;
 	}
+	//#endregion
 
+	//#region Boolean - Trigger something
 	@ConfigItem(
-		keyName = "ihsdev2",
-		name = "Int",
-		description = "myInt"
+		position = 4,
+		keyName = "TriggerSomething",
+		name = "Trigger Something?",
+		description = "Trigger something"
 	)
-	default int myInt()
+	default boolean triggerSomething()
 	{
-		return 0;
+		return true;
 	}
-
+	//#endregion
+	
+	//#region Combobox - combo box of things
+	// TODO fix combobox
 	@ConfigItem(
-		keyName = "ihsdev3",
+		position = 5,
+		keyName = "Combobox1",
 		name = "Combobox",
-		description = "myCombobox"
+		description = "myCombobox things"
 	)
 	default Enum myCombobox()
 	{
@@ -63,5 +116,5 @@ public interface IHSDevConfig extends Config
 		MEDIUM,
 		HIGH
 	}
-	
+	//#endregion
 }

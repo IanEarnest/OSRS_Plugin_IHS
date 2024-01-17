@@ -26,9 +26,8 @@
             "vmArgs": [
                 "-ea"
             ],
-            "args": [
-                "--developer-mode"
-            ]
+            "args": "--developer-mode"
+            //"args": "--developer-mode --debug"
         }
     ]
 }
