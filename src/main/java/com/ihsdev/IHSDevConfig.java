@@ -88,7 +88,7 @@ public interface IHSDevConfig extends Config
 
 	//#region Boolean - Trigger something
 	@ConfigItem(
-		position = 4,
+		position = 5,
 		keyName = "TriggerSomething",
 		name = "Trigger Something?",
 		description = "Trigger something"
@@ -98,11 +98,11 @@ public interface IHSDevConfig extends Config
 		return true;
 	}
 	//#endregion
-	
+
 	//#region Combobox - combo box of things
 	// TODO fix combobox
 	@ConfigItem(
-		position = 5,
+		position = 6,
 		keyName = "Combobox1",
 		name = "Combobox",
 		description = "myCombobox things"
@@ -117,4 +117,10 @@ public interface IHSDevConfig extends Config
 		HIGH
 	}
 	//#endregion
+
+
+
+
+
+	
 }

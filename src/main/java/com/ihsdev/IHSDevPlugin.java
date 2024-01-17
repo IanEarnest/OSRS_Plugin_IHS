@@ -1,6 +1,10 @@
+//#region imports
 package com.ihsdev;
 
 import com.google.inject.Provides;
+
+import java.awt.image.BufferedImage;
+
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
@@ -15,7 +19,11 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.plugins.info.InfoPanel;
+import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.NavigationButton;
+import net.runelite.client.ui.PluginPanel;
+import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.util.ImageUtil;
 import net.runelite.client.util.WorldUtil;
 import net.runelite.http.api.worlds.World;
@@ -29,7 +37,8 @@ import net.runelite.http.api.worlds.WorldResult;
 	tags = {"dev", "test"},
 	loadWhenOutdated = true,
 	enabledByDefault = true
-)
+	)
+//#endregion
 public class IHSDevPlugin extends Plugin
 {
 	//#region startup, shutdown
@@ -47,35 +56,35 @@ public class IHSDevPlugin extends Plugin
 	@Inject
     private WorldService worldService;
 
+
+	@Inject
+	private ClientToolbar clientToolbar;
+
+	private IHSDevInfoPanel panel;
+	private NavigationButton navButton;
+
+
+	//@Inject
+	//private OverlayManager overlayManager;
+
+
 	@Override
 	protected void startUp() throws Exception
 	{
-		String myMessage = "Yo";
 		//String info = STR."My name is \{name}"; // java 21
-		LogWithColour("IHSDev started! " + myMessage);
-		
-		//SetWorld();
-		// Panel...
-		/*
-		 panel = new LevelsPanel(this, config);
-		 navButton = NavigationButton.builder()
-		 .tooltip("Time to Level")
-		 .icon(ImageUtil.getResourceStreamFromClass(getClass(), "/icon.png"))
-		 .priority(50)
-		 .panel(panel)
-		 .build();
-		 
-		 clientToolbar.addNavigation(navButton);
-		 */
+		LogWithColour("IHSDev started! ");
+		loadPanel();
 	}
 
 	@Override
 	protected void shutDown() throws Exception
 	{
 		LogWithColour("IHSDev stopped!");
+		unloadPanel();
 	}
 	//#endregion
 	
+	//#region providers
 	@Provides
 	IHSDevConfig provideConfig(ConfigManager configManager)
 	{
@@ -83,13 +92,14 @@ public class IHSDevPlugin extends Plugin
 	}
 	// Used for myCheckbox
 	/*
-		* 
-		@Provides
-		IHSDevConfig getConfig(ConfigManager configManager)
-		{
-			return configManager.getConfig(IHSDevConfig.class);
-		}
+	* 
+	@Provides
+	IHSDevConfig getConfig(ConfigManager configManager)
+	{
+		return configManager.getConfig(IHSDevConfig.class);
+	}
 	*/
+	//#endregion
 
 	//#region Subscriptions
 	// GameState
@@ -142,10 +152,46 @@ public class IHSDevPlugin extends Plugin
 
 
 
+	
+	//#region UI
+	public void loadPanel()
+	{
+		//OSRS_Plugin_IHS\build\classes\java\test\com\ihsdev
+		//https://github.com/runelite/runelite/blob/master/runelite-client/src/main/resources/net/runelite/client/plugins/info/info_icon.png
+		//https://github.com/runelite/runelite/blob/master/runelite-client/src/main/java/net/runelite/client/plugins/info/InfoPanel.java
+		panel = injector.getInstance(IHSDevInfoPanel.class);
+		panel.init();
+
+		final BufferedImage icon = ImageUtil.loadImageResource(getClass(), "icon.png"); //info_icon.png icon
+		
+		navButton = NavigationButton.builder()
+		.tooltip("IHSDev")
+		.icon(icon)
+		.priority(99) //10 //50
+		.panel(panel)
+		.build();
+		
+		clientToolbar.addNavigation(navButton);
+		//clientToolbar.openPanel(navButton);
+		LogWithColour("Panel set!");
+	}
+
+	public void unloadPanel()
+	{
+		panel.deinit();
+		clientToolbar.removeNavigation(navButton);
+		panel = null;
+		navButton = null;
+	}
+	//#endregion
+	
 
 
-	
-	
+
+
+
+
+
 	//#region Custom code
 	public void GameTickStuff(GameTick e)
 	{
@@ -161,6 +207,7 @@ public class IHSDevPlugin extends Plugin
 		//config.defaultWorld = 0;
 		//config.defaultWorldInt(client.getIdleTimeout());
 	}
+
 	public void ItemDespawnedStuff(ItemDespawned e)
 	{
 		// TODO Display item lost
@@ -171,6 +218,7 @@ public class IHSDevPlugin extends Plugin
 		LogWithColour("id " + e.getItem().getId());
 		LogWithColour("item " + e.getTile().getGroundItems());
 	}
+
 	public boolean hasMessageSent = false;
 	// Client initialization - set world only once after rendering
 	public void BeforeRenderStuff(BeforeRender e)
@@ -183,6 +231,7 @@ public class IHSDevPlugin extends Plugin
 		LogWithColour("Login screen reached"); 
 		SetWorld();
 	}
+
 	// Happens on chat notifications too?
 	public void OverheadTextChangeFromAhToAhh(OverheadTextChanged e)
 	{
@@ -191,6 +240,7 @@ public class IHSDevPlugin extends Plugin
 			client.getLocalPlayer().setOverheadText("Ahh");
 		}
 	}
+
 	// On Config change
 	public void ConfigChangeThing(ConfigChanged e)
 	{
@@ -221,7 +271,7 @@ public class IHSDevPlugin extends Plugin
 	// Set world to load on
 	public void SetWorld()
 	{
-		LogWithColour("SetWorld");
+		//LogWithColour("SetWorld");
 		if (client.getGameState() != GameState.LOGIN_SCREEN) return;
 		if (config.doWorldSet() == false) return;
 
@@ -247,6 +297,7 @@ public class IHSDevPlugin extends Plugin
 		LogWithColour("World set to " + rsWorld.getId());
 		client.changeWorld(rsWorld);
 	}
+
 	// Log to debug with coloured text
 	public void LogWithColour(String message)
 	{
